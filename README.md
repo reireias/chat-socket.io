@@ -1,6 +1,6 @@
 # chat-socket.io
 
-> My cat&#39;s pajamas Nuxt.js project
+> example chat application with socket.io
 
 ## Build Setup
 

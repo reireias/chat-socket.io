@@ -1,7 +1,7 @@
 {
   "name": "chat-socket.io",
   "version": "1.0.0",
-  "description": "My cat&#39;s pajamas Nuxt.js project",
+  "description": "example chat application with socket.io",
   "author": "reireias",
   "private": true,
   "scripts": {
