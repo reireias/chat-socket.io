@@ -26,6 +26,11 @@ const session = {
 
 // Import and Set Nuxt.js options
 config.dev = process.env.NODE_ENV !== 'production'
+if (process.env.NODE_ENV === 'production') {
+  session.cookie.secure = true
+  session.proxy = true
+  app.set('trust proxy', 1)
+}
 
 const strategy = new Auth0Strategy(
   {
