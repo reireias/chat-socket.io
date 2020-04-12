@@ -40,7 +40,7 @@ const strategy = new Auth0Strategy(
      * extraParams.id_token has the JSON Web Token
      * profile has all the information from the user
      */
-    console.log(profile)
+    // console.log(profile)
     return done(null, profile)
   }
 )
@@ -66,6 +66,10 @@ app.use((req, res, next) => {
 })
 
 app.use('/', authRouter)
+
+app.get('/session', (req, res) => {
+  res.json({ user: req.user })
+})
 
 async function start() {
   // Init Nuxt.js

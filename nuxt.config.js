@@ -34,6 +34,9 @@ module.exports = {
   /*
    ** Nuxt.js dev-modules
    */
+  router: {
+    middleware: 'session',
+  },
   buildModules: [
     // Doc: https://github.com/nuxt-community/eslint-module
     '@nuxtjs/eslint-module',
