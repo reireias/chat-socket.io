@@ -18,6 +18,10 @@ export const actions = {
   deleteRoom(_, payload) {
     // TODO: call api
   },
+  addMessage(_, payload) {
+    // TODO: call api
+    console.log(payload)
+  },
 }
 
 export const getters = {
@@ -29,5 +33,11 @@ export const getters = {
   },
   rooms(state) {
     return state.rooms
+  },
+  room(state) {
+    return state.room
+  },
+  messages(state) {
+    return state.messages
   },
 }
