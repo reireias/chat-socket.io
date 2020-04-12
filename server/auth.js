@@ -20,6 +20,12 @@ router.get(
 // GET /callback
 router.get('/callback', (req, res, next) => {
   passport.authenticate('auth0', (err, user, info) => {
+    // eslint-disable-next-line no-console
+    console.log('err', err)
+    // eslint-disable-next-line no-console
+    console.log('user', user)
+    // eslint-disable-next-line no-console
+    console.log('info', info)
     if (err) {
       return next(err)
     }
@@ -27,10 +33,16 @@ router.get('/callback', (req, res, next) => {
       return res.redirect('/login')
     }
     req.logIn(user, (err) => {
+      // eslint-disable-next-line no-console
+      console.log('req.logIn user', user)
+      // eslint-disable-next-line no-console
+      console.log('req.logIn err', err)
       if (err) {
         return next(err)
       }
       const returnTo = req.session.returnTo
+      // eslint-disable-next-line no-console
+      console.log('req.logIn returnTo', returnTo)
       delete req.session.returnTo
       res.redirect(returnTo || '/')
     })
