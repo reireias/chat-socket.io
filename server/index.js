@@ -28,9 +28,9 @@ const session = {
 
 // Import and Set Nuxt.js options
 config.dev = process.env.NODE_ENV !== 'production'
-if (process.env.NODE_ENV === 'production') {
-  session.cookie.secure = true
-}
+// if (process.env.NODE_ENV === 'production') {
+//   session.cookie.secure = true
+// }
 
 const strategy = new Auth0Strategy(
   {
