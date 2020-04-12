@@ -1,16 +1,23 @@
 const express = require('express')
+const redis = require('redis')
 const consola = require('consola')
 const { Nuxt, Builder } = require('nuxt')
 const expressSession = require('express-session')
 const passport = require('passport')
 const Auth0Strategy = require('passport-auth0')
+const RedisStore = require('connect-redis')(expressSession)
+
 const config = require('../nuxt.config.js')
 const authRouter = require('./auth')
 
 const app = express()
+const redisClient = redis.createClient(
+  process.env.REDIS_URL || 'redis://localhost:6379'
+)
 
 // TODO: change
 const session = {
+  store: new RedisStore({ client: redisClient }),
   secret: process.env.EXPRESS_SESSION_SECRET,
   cookie: {},
   resave: false,
