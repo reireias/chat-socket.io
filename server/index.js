@@ -5,10 +5,12 @@ const { Nuxt, Builder } = require('nuxt')
 const expressSession = require('express-session')
 const passport = require('passport')
 const Auth0Strategy = require('passport-auth0')
+const bodyParser = require('body-parser')
 const RedisStore = require('connect-redis')(expressSession)
 
 const config = require('../nuxt.config.js')
 const authRouter = require('./auth')
+const roomRouter = require('./room')
 
 const app = express()
 const redisClient = redis.createClient(
@@ -53,6 +55,7 @@ const strategy = new Auth0Strategy(
   }
 )
 
+app.use(bodyParser.json())
 app.use(expressSession(session))
 passport.use(strategy)
 app.use(passport.initialize())
@@ -74,6 +77,7 @@ app.use((req, res, next) => {
 })
 
 app.use('/', authRouter)
+app.use('/api', roomRouter)
 
 app.get('/session', (req, res) => {
   res.json({ user: req.user })

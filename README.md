@@ -25,12 +25,14 @@ $ yarn generate
 ## Heroku Setup
 
 ```console
-heroku config:set NPM_CONFIG_PRODUCTION=false
-heroku config:set HOST=0.0.0.0
-heroku config:set NODE_ENV=production
-heroku config:set AUTH0_DOMAIN="<auth0_domain>"
-heroku config:set AUTH0_CLIENT_ID="<auth0_client_id>"
-heroku config:set AUTH0_CLIENT_SECRET="<auth0_client_secret>"
-heroku config:set AUTH0_CALLBACK_URL="<auth0_callback_url>"
-heroku config:set EXPRESS_SESSION_SECRET="<session_secret>"
+$ heroku config:set NPM_CONFIG_PRODUCTION=false
+$ heroku config:set HOST=0.0.0.0
+$ heroku config:set NODE_ENV=production
+$ heroku config:set AUTH0_DOMAIN="<auth0_domain>"
+$ heroku config:set AUTH0_CLIENT_ID="<auth0_client_id>"
+$ heroku config:set AUTH0_CLIENT_SECRET="<auth0_client_secret>"
+$ heroku config:set AUTH0_CALLBACK_URL="<auth0_callback_url>"
+$ heroku config:set EXPRESS_SESSION_SECRET="<session_secret>"
+
+$ heroku addons:create heroku-redis:hobby-dev
 ```

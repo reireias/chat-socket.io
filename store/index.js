@@ -1,3 +1,5 @@
+import axios from 'axios'
+
 export const state = () => ({
   loading: true,
   user: null,
@@ -9,18 +11,29 @@ export const mutations = {
     state.user = user
     state.loading = false
   },
+  setRooms(state, rooms) {
+    state.rooms = rooms
+  },
 }
 
 export const actions = {
-  addRoom(_, payload) {
-    // TODO: call api
+  async addRoom({ dispatch }, payload) {
+    await axios.post('/api/rooms', { name: payload.name })
+    dispatch('getRooms')
   },
-  deleteRoom(_, payload) {
-    // TODO: call api
+  async deleteRoom({ dispatch }, payload) {
+    await axios.delete(`/api/rooms/${payload.id}`)
+    dispatch('getRooms')
   },
   addMessage(_, payload) {
     // TODO: call api
     console.log(payload)
+  },
+  async getRooms({ commit }) {
+    const res = await axios.get('/api/rooms')
+    // TODO: error handle
+    const payload = res.data
+    commit('setRooms', payload)
   },
 }
 

@@ -76,17 +76,17 @@ export default {
     ...mapGetters(['user', 'loading', 'rooms']),
   },
   created() {
-    // TODO: get rooms
+    this.getRooms()
   },
   methods: {
     onCreate() {
-      this.addRoom({ uid: this.user.uid, name: this.name })
+      this.addRoom({ name: this.name })
       this.name = null
     },
     onDelete(room) {
-      this.deleteRoom({ uid: this.user.uid, id: room.id })
+      this.deleteRoom({ id: room.id })
     },
-    ...mapActions(['addRoom', 'deleteRoom']),
+    ...mapActions(['addRoom', 'deleteRoom', 'getRooms']),
   },
 }
 </script>
