@@ -19,7 +19,9 @@ const redisClient = redis.createClient(
 const session = {
   store: new RedisStore({ client: redisClient }),
   secret: process.env.EXPRESS_SESSION_SECRET,
-  cookie: {},
+  cookie: {
+    sameSite: false,
+  },
   resave: false,
   saveUninitialized: false,
 }
