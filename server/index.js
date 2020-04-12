@@ -19,18 +19,13 @@ const redisClient = redis.createClient(
 const session = {
   store: new RedisStore({ client: redisClient }),
   secret: process.env.EXPRESS_SESSION_SECRET,
-  cookie: {
-    sameSite: false,
-  },
+  cookie: {},
   resave: false,
   saveUninitialized: false,
 }
 
 // Import and Set Nuxt.js options
 config.dev = process.env.NODE_ENV !== 'production'
-// if (process.env.NODE_ENV === 'production') {
-//   session.cookie.secure = true
-// }
 
 const strategy = new Auth0Strategy(
   {
@@ -49,7 +44,6 @@ const strategy = new Auth0Strategy(
      * extraParams.id_token has the JSON Web Token
      * profile has all the information from the user
      */
-    // console.log(profile)
     return done(null, profile)
   }
 )
