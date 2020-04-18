@@ -9,21 +9,21 @@
     </v-row>
     <v-row v-for="message in messages" :key="message.id" justify="center">
       <v-col
-        :class="user.uid == message.author ? 'my-message' : 'other-message'"
+        :class="user.id == message.author ? 'my-message' : 'other-message'"
         cols="12"
         md="8"
         xl="5"
       >
-        <v-avatar v-if="user.uid != message.author">
+        <v-avatar v-if="user.id != message.author">
           <img :src="message.authorIcon" />
         </v-avatar>
         <v-card
           class="message-card"
-          :color="user.uid == message.author ? '#AED581' : 'white'"
+          :color="user.id == message.author ? '#AED581' : 'white'"
         >
           <v-card-title v-text="message.text"></v-card-title>
         </v-card>
-        <v-avatar v-if="user.uid == message.author">
+        <v-avatar v-if="user.id == message.author">
           <img :src="message.authorIcon" />
         </v-avatar>
       </v-col>
@@ -52,39 +52,50 @@
 </template>
 
 <script>
-import { mapActions, mapGetters } from 'vuex'
+import io from 'socket.io-client'
+import { mapGetters } from 'vuex'
 import moment from 'moment'
 
 export default {
   data() {
     return {
       text: null,
+      socket: null,
+      messages: [],
     }
   },
   computed: {
-    ...mapGetters(['user', 'room', 'messages']),
+    ...mapGetters(['user', 'room']),
   },
   created() {
+    this.socket = io()
+    this.socket.emit('join-room', {
+      id: this.user.id,
+      roomId: this.$route.query.roomId,
+    })
+    this.socket.on('send-message', this.recieveMessage)
     // TODO: get room
     // TODO: get message
   },
   methods: {
+    recieveMessage(message) {
+      this.messages.push(message)
+    },
     onPost() {
-      console.log(this.user)
       if (this.text) {
-        this.addMessage({
-          uid: this.user.id,
+        const message = {
+          author: this.user.id,
           authorIcon: this.user.picture,
           text: this.text,
           roomId: this.$route.query.roomId,
-        })
+        }
+        this.socket.emit('send-message', message)
         this.text = null
       }
     },
     format(timestamp) {
       return moment(timestamp.seconds * 1000).format('YYYY/MM/DD HH:mm:ss')
     },
-    ...mapActions(['addMessage']),
   },
 }
 </script>

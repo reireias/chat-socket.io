@@ -27,7 +27,6 @@ export const actions = {
   },
   addMessage(_, payload) {
     // TODO: call api
-    console.log(payload)
   },
   async getRooms({ commit }) {
     const res = await axios.get('/api/rooms')

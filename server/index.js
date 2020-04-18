@@ -1,6 +1,8 @@
+const { createServer } = require('http')
 const express = require('express')
 const redis = require('redis')
 const consola = require('consola')
+const socketio = require('socket.io')
 const { Nuxt, Builder } = require('nuxt')
 const expressSession = require('express-session')
 const passport = require('passport')
@@ -13,11 +15,12 @@ const authRouter = require('./auth')
 const roomRouter = require('./room')
 
 const app = express()
+const http = createServer(app)
+const io = socketio(http)
 const redisClient = redis.createClient(
   process.env.REDIS_URL || 'redis://localhost:6379'
 )
 
-// TODO: change
 const session = {
   store: new RedisStore({ client: redisClient }),
   secret: process.env.EXPRESS_SESSION_SECRET,
@@ -83,6 +86,21 @@ app.get('/session', (req, res) => {
   res.json({ user: req.user })
 })
 
+const store = {}
+
+io.on('connection', (socket) => {
+  socket.on('join-room', (data) => {
+    store[data.id] = data
+    socket.join(data.roomId)
+  })
+
+  socket.on('send-message', (message) => {
+    const roomId = store[message.author]
+    socket.broadcast.to(roomId).emit('send-message', message)
+    io.to(socket.id).emit('send-message', message)
+  })
+})
+
 async function start() {
   // Init Nuxt.js
   const nuxt = new Nuxt(config)
@@ -100,7 +118,7 @@ async function start() {
   app.use(nuxt.render)
 
   // Listen the server
-  app.listen(port, host)
+  http.listen(port, host)
   consola.ready({
     message: `Server listening on http://${host}:${port}`,
     badge: true,
