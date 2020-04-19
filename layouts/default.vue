@@ -1,7 +1,7 @@
 <template>
   <v-app>
     <v-app-bar app fixed max-height="64">
-      <v-toolbar-title>Example Chat Application with Firebase</v-toolbar-title>
+      <v-toolbar-title>Example Chat Application with Socket.io</v-toolbar-title>
       <v-spacer></v-spacer>
       <v-btn
         v-if="!['/', '/login'].includes($route.path)"
