@@ -53,7 +53,7 @@
 
 <script>
 import io from 'socket.io-client'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapActions } from 'vuex'
 import moment from 'moment'
 
 export default {
@@ -74,8 +74,8 @@ export default {
       roomId: this.$route.query.roomId,
     })
     this.socket.on('send-message', this.recieveMessage)
-    // TODO: get room
-    // TODO: get message
+    this.getRoom({ id: this.$route.query.roomId })
+    this.initMessages()
   },
   methods: {
     recieveMessage(message) {
@@ -96,6 +96,7 @@ export default {
     format(timestamp) {
       return moment(timestamp.seconds * 1000).format('YYYY/MM/DD HH:mm:ss')
     },
+    ...mapActions(['getRoom']),
   },
 }
 </script>

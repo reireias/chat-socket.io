@@ -6,7 +6,6 @@ const router = express.Router()
 const redis = new Redis(process.env.REDIS_URL || 'redis://localhost:6379')
 
 router.post('/rooms', async (req, res) => {
-  // TODO: check user
   if (!req.user) {
     res.status(401).json({ error: 'Unauthorized' })
     return
@@ -20,7 +19,6 @@ router.post('/rooms', async (req, res) => {
 })
 
 router.get('/rooms', async (req, res) => {
-  // TODO: check user
   const pattern = `rooms.${req.user.id}.*`
   const keys = await redis.keys(pattern)
   const result = await redis.mget(keys)
@@ -29,8 +27,18 @@ router.get('/rooms', async (req, res) => {
   res.status(200).json(rooms)
 })
 
+router.get('/rooms/:id', async (req, res) => {
+  const pattern = `rooms.*.${req.params.id}`
+  const keys = await redis.keys(pattern)
+  if (keys.length !== 1) {
+    res.status(404).json({ error: 'NotFound' })
+    return
+  }
+  const result = await redis.get(keys[0])
+  res.status(200).json(JSON.parse(result))
+})
+
 router.delete('/rooms/:id', async (req, res) => {
-  // TODO: check user
   const key = `rooms.${req.user.id}.${req.params.id}`
   await redis.del(key)
   res.status(200).json({})
