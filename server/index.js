@@ -2,7 +2,6 @@ const { createServer } = require('http')
 const express = require('express')
 const redis = require('redis')
 const consola = require('consola')
-const socketio = require('socket.io')
 const { Nuxt, Builder } = require('nuxt')
 const expressSession = require('express-session')
 const passport = require('passport')
@@ -13,10 +12,11 @@ const RedisStore = require('connect-redis')(expressSession)
 const config = require('../nuxt.config.js')
 const authRouter = require('./auth')
 const roomRouter = require('./room')
+const { initializeSocket } = require('./socket')
 
 const app = express()
 const http = createServer(app)
-const io = socketio(http)
+initializeSocket(http)
 const redisClient = redis.createClient(
   process.env.REDIS_URL || 'redis://localhost:6379'
 )
@@ -84,21 +84,6 @@ app.use('/api', roomRouter)
 
 app.get('/session', (req, res) => {
   res.json({ user: req.user })
-})
-
-const store = {}
-
-io.on('connection', (socket) => {
-  socket.on('join-room', (data) => {
-    store[data.id] = data
-    socket.join(data.roomId)
-  })
-
-  socket.on('send-message', (message) => {
-    const roomId = store[message.author]
-    socket.broadcast.to(roomId).emit('send-message', message)
-    io.to(socket.id).emit('send-message', message)
-  })
 })
 
 async function start() {

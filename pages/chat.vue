@@ -73,11 +73,14 @@ export default {
       id: this.user.id,
       roomId: this.$route.query.roomId,
     })
+    this.socket.on('init-messages', this.initMessages)
     this.socket.on('send-message', this.recieveMessage)
     this.getRoom({ id: this.$route.query.roomId })
-    this.initMessages()
   },
   methods: {
+    initMessages(messages) {
+      this.messages = messages
+    },
     recieveMessage(message) {
       this.messages.push(message)
     },
