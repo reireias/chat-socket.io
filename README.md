@@ -7,6 +7,12 @@
 - Text chat in room
 - Save chat message to storage
 
+## Chat Architecture
+![chat-architecture-socketio](https://user-images.githubusercontent.com/24800246/80309902-cc80bf80-8812-11ea-82ae-351894d80177.png)
+
+## Authentication
+[Auth0](https://auth0.com/)
+
 ## Build Setup
 
 ```bash
