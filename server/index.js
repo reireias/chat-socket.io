@@ -16,7 +16,6 @@ const { initializeSocket } = require('./socket')
 
 const app = express()
 const http = createServer(app)
-initializeSocket(http)
 const redisClient = redis.createClient(
   process.env.REDIS_URL || 'redis://localhost:6379'
 )
@@ -59,7 +58,9 @@ const strategy = new Auth0Strategy(
 )
 
 app.use(bodyParser.json())
-app.use(expressSession(session))
+const sessionMiddleware = expressSession(session)
+initializeSocket(http, sessionMiddleware)
+app.use(sessionMiddleware)
 passport.use(strategy)
 app.use(passport.initialize())
 app.use(passport.session())
@@ -71,8 +72,6 @@ passport.serializeUser((user, done) => {
 passport.deserializeUser((user, done) => {
   done(null, user)
 })
-
-app.use(expressSession(session))
 
 app.use((req, res, next) => {
   res.locals.isAuthenticated = req.isAuthenticated()

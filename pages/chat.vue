@@ -87,8 +87,8 @@ export default {
     onPost() {
       if (this.text) {
         const message = {
-          author: this.user.id,
-          authorIcon: this.user.picture,
+          // author: this.user.id,
+          // authorIcon: this.user.picture,
           text: this.text,
           roomId: this.$route.query.roomId,
         }

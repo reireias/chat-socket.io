@@ -18,13 +18,18 @@ const getMessages = async (roomId) => {
   return result ? result.map((x) => JSON.parse(x)) : []
 }
 
-const initializeSocket = (http) => {
+const initializeSocket = (http, sessionMiddleware) => {
   const io = socketio(http)
+  io.use((socket, next) => {
+    sessionMiddleware(socket.request, socket.request.res || {}, next)
+  })
 
   io.on('connection', (socket) => {
+    const userId = socket.request.session.passport.user.id
+    const icon = socket.request.session.passport.user.picture
     socket.on('join-room', async (data) => {
       try {
-        store[data.id] = data
+        store[userId] = data
         socket.join(data.roomId)
 
         const messages = await getMessages(data.roomId)
@@ -34,9 +39,15 @@ const initializeSocket = (http) => {
       }
     })
 
-    socket.on('send-message', async (message) => {
+    socket.on('send-message', async (data) => {
+      const roomId = store[userId].roomId
+      const message = {
+        text: data.text,
+        roomId,
+        author: userId,
+        authorIcon: icon,
+      }
       try {
-        const roomId = store[message.author].roomId
         socket.broadcast.to(roomId).emit('send-message', message)
         io.to(socket.id).emit('send-message', message)
         await addMessage(roomId, message)
