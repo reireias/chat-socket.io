@@ -6,7 +6,7 @@
       </v-col>
     </v-row>
     <v-row justify="center" align="center">
-      <v-col cols="2">
+      <v-col cols="4" md="2">
         <v-text-field
           ref="nameField"
           v-model="name"
@@ -14,7 +14,7 @@
           :rules="[rules.required]"
         ></v-text-field>
       </v-col>
-      <v-col class="index-content" cols="2">
+      <v-col class="index-content" cols="4" md="2">
         <v-btn color="primary" :disabled="!name" @click="onCreate"
           >create</v-btn
         >
@@ -35,7 +35,7 @@
       </v-col>
     </v-row>
     <v-row justify="center">
-      <v-col cols="4">
+      <v-col cols="12" sm="8" md="6">
         <v-list>
           <v-list-item v-if="rooms.length == 0">
             <v-list-item-subtitle class="text-center"
